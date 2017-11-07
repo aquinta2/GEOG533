@@ -1,0 +1,489 @@
+---
+title: "Geog533 Lab 7 - Correlation"
+author: "Alexandria Quintana"
+output: 
+  html_notebook:
+    toc: TRUE
+    toc_float: TRUE
+---
+
+## Question 1
+This is Exercise 1 in Chapter 7 of the Textbook [R].
+
+### Problem 1a
+Find the correlation coefficient, *r*, for the following sample data on income and education:
+```{r}
+library(knitr)
+obs <- seq(1:5)
+income <- c(30,28,52,40,35)
+edu <- c(12,13,18,16,17)
+df <- data.frame(obs,income,edu)
+names(df) <- c("Observation","Income ($*1000)","Education (Years)")
+kable(df)
+```
+
+Solution 1a
+```{r}
+colone <- c(30,28,52,40,35)
+first <- df$colone
+
+coltwo <- c(12,13,18,16,17)
+second <- df$coltwo
+
+df <- data.frame(colone, coltwo)
+View(df)
+
+#inividual steps to be able to find R
+mx <- mean(colone)
+mx
+
+my <- mean(coltwo)
+my
+
+df$xd <- colone - mx
+
+df$my <- coltwo - my
+
+df$prod <- df$xd*df$my
+
+a <- sum(df$prod)
+a
+
+sx <- sd(colone)
+sx
+
+sy <- sd(coltwo)
+sy
+
+b <- 4*sx*sy
+b
+#T o find R
+r = a/b
+r
+
+```
+
+
+### Problem 1b
+Test the null hypothesis ρ = 0.
+
+Solution 1b
+```{r}
+t <- r*sqrt(3)/sqrt(1-r^2)
+t
+
+
+#Critical T test
+ct <- qt(0.975, 3)
+ct
+
+plot(df)
+plot(colone, coltwo)
+
+
+#Secondary test 
+cor.test(x = colone, y = coltwo)
+
+#we reject
+```
+
+
+### Problem 1c
+Find Spearman’s rank correlation coefficient for these data.
+
+Solution 1c
+```{r}
+cor.test(df$colone, df$coltwo,alternative = "less", method = "spearman")
+```
+
+
+### Problem 1d
+Test whether the observed value of rs from part (c) is significantly different from zero.
+
+Solution 1d
+```{r}
+#we accept
+```
+
+
+
+## Question 2
+This is Exercise 3 in Chapter 7 of the Textbook [R].
+
+### Problem
+The distribution of the t-statistic for testing the significance of a correlation coefficient has n – 2 degrees of freedom. If the sample size is 36 and α = 0.05, what is the smallest absolute value a correlation coefficient must have to be significant? What if the sample size is 80?
+
+### Solution
+```{r}
+
+ 
+#sample size of 36
+x <- 2/sqrt(36)
+x 
+
+#sample size of 80
+xx <- 2/sqrt(80)
+xx
+
+
+```
+
+
+
+## Question 3
+This is Exercise 4 in Chapter 7 of the Textbook [R].
+
+### Problem
+Find the correlation coefficient for the following data:
+
+```{r}
+library(knitr)
+Obs <- seq(1:4)
+X <- c(2,8,9,7)
+Y <- c(6,6,10,4)
+df <- data.frame(Obs,X,Y)
+kable(df)
+```
+
+### Solution
+```{r}
+colone <- c(2,8,9,7)
+first <- df$colone
+
+coltwo <- c(6,6,10,4)
+second <- df$coltwo
+
+df <- data.frame(colone, coltwo)
+View(df)
+
+mx <- mean(colone)
+mx
+
+my <- mean(coltwo)
+my
+
+df$xd <- colone - mx
+
+df$my <- coltwo - my
+
+df$prod <- df$xd*df$my
+
+a <- sum(df$prod)
+a
+
+sx <- sd(colone)
+sx
+
+sy <- sd(coltwo)
+sy
+
+b <- 3*sx*sy
+b
+
+r = a/b
+r
+
+t <- r*sqrt(2)/sqrt(1-r^2)
+t
+
+
+
+ct <- qt(0.975, 2)
+ct
+
+plot(df)
+plot(colone, coltwo)
+
+
+
+cor.test(x = colone, y = coltwo)
+
+```
+
+
+
+## Question 4
+This is Exercise 6 in Chapter 7 of the Textbook [R].
+
+### Problem
+Find the correlation coefficient between median annual income in the United States and the number of horse races won by the leading jockey, for the period 1984–1995. Test the hypothesis that the true correlation coefficient is equal to zero. Interpret your results.
+
+```{r}
+year <- 1984:1994
+income <- c(35165,35778,37027,37256,37512,37997,37343,36054,35593,35241,35486)
+races <- c(399,469,429,450,474,598,364,430,433,410,317)
+df <- data.frame(year,income,races)
+names(df) <- c("Year","Median income","Number of races won by leading jockey")
+kable(df)
+```
+
+
+### Solution
+```{r}
+colone <- c(35165,35778,37027,37256,37512,37997,37343,36054,35593,35241,35486)
+first <- df$colone
+
+coltwo <- c(399,469,429,450,474,598,364,430,433,410,317)
+second <- df$coltwo
+
+df <- data.frame(colone, coltwo)
+View(df)
+
+mx <- mean(colone)
+mx
+
+my <- mean(coltwo)
+my
+
+df$xd <- colone - mx
+
+df$my <- coltwo - my
+
+df$prod <- df$xd*df$my
+
+a <- sum(df$prod)
+a
+
+sx <- sd(colone)
+sx
+
+sy <- sd(coltwo)
+sy
+
+b <- 10*sx*sy
+b
+
+r = a/b
+r
+
+t <- r*sqrt(9)/sqrt(1-r^2)
+t
+
+
+
+ct <- qt(0.975, 9)
+ct
+
+plot(df)
+plot(colone, coltwo)
+
+
+
+cor.test(x = colone, y = coltwo)
+#we accept 
+```
+we reject 
+
+
+## Question 5
+This is Exercise 7 in Chapter 7 of the Textbook [R].
+
+### Problem
+For the following ranked data, find Spearman’s r, and then test the null hypothesis (using a Type I error probability of 0.10) that the true correlation is equal to zero.
+
+```{r}
+library(knitr)
+obs <- 1:6
+x <- c(1,2,5,6,11,12)
+y <- c(8,4,12,3,10,7)
+df <- data.frame(obs,x,y)
+names(df) <- c("Observation","Rank of x","Rank of y")
+kable(df)
+```
+
+
+### Solution
+```{r}
+#compare p value to .1, greater than accept 
+colone <- c(1,2,5,6,11,12)
+first <-  df$colone
+coltwo <- c(8,4,12,3,10,7)
+second <- df$coltwo
+cor.test(df$colone, df$coltwo,alternative = "less", method = "spearman")
+#we accept
+```
+
+
+
+## Question 6
+This is Exercise 8 in Chapter 7 of the Textbook [R].
+
+### Problem
+Find Pearson’s r for the following data, and then test the null hypothesis that the correlation coefficient is equal to zero. Use a Type I error probability of 0.05.
+
+```{r}
+library(knitr)
+obs <- 1:6
+x <- c(3.2,2.4,1.6,8.3,7.2,5.1)
+y <- c(6.2,7.3,8.1,2.6,6.3,4.3)
+df <- data.frame(obs,x,y)
+names(df) <- c("Observation","x","y")
+kable(df)
+```
+
+
+### Solution
+```{r}
+colone <- c(3.2,2.4,1.6,8.3,7.2,5.1)
+first <-  df$colone
+coltwo <- c(6.2,7.3,8.1,2.6,6.3,4.3)
+second <- df$coltwo
+cor.test(df$colone, df$coltwo,alternative = "less", method = "pearson")
+```
+we accept
+
+## Question 7
+This is Exercise 9 in Chapter 7 of the Textbook [R].
+
+### Problem
+Using R and the Milwaukee dataset, find the correlation between number of bedrooms and lot size.
+
+### Solution
+```{r}
+mdata <- read.csv("Milwaukee_sales.csv", header = TRUE)
+rooms <- mdata$Bedrms
+lotsize <- mdata$LotSize
+
+cor.test(x = rooms, y = lotsize)
+```
+
+
+## Question 8
+This is Exercise 10 in Chapter 7 of the Textbook [R].
+
+### Problem
+Using R and the Hypothetical UK Housing Prices dataset, find the correlation between floor area and number of bedrooms.
+
+### Solution
+```{r}
+mdata <- read.csv("UK_Housing.csv", header = TRUE)
+floor <- mdata$floorarea
+br <- mdata$bedrooms
+
+cor.test(x = floor, y = br)
+```
+
+
+## Question 9
+Use the **cars** data frame in the **datasets** package to perform the following tasks: 
+
+### Problem 9a
+Plot a scatterplot for the data frame (x: speed, y: dist)
+
+Solution 9a
+```{r}
+df <- cars
+speed <- df$speed
+dist <- df$dist
+plot(speed, dist)
+
+```
+
+
+### Problem 9b
+How many rows in the data frame?
+
+Solution 9b
+```{r}
+nrow(df)
+```
+
+
+### Problem 9c
+Calculate Pearson’s correlation coefficient using the equation below:
+$$r=\frac{\sum_{n}^{i=1}(x_i-\bar{x})(y_i-\bar{y})}{(n-1)s_{x}s_{y}}$$
+
+Solution 9c
+```{r}
+colone <- df$speed
+first <- df$colone
+
+coltwo <- df$dist
+second <- df$coltwo
+
+df <- data.frame(colone, coltwo)
+View(df)
+
+mx <- mean(colone)
+mx
+
+my <- mean(coltwo)
+my
+
+df$xd <- colone - mx
+
+df$my <- coltwo - my
+
+df$prod <- df$xd*df$my
+
+a <- sum(df$prod)
+a
+
+sx <- sd(colone)
+sx
+
+sy <- sd(coltwo)
+sy
+
+b <- 49*sx*sy
+b
+
+r = a/b
+r
+
+t <- r*sqrt(48)/sqrt(1-r^2)
+t
+
+
+
+ct <- qt(0.975, 48)
+ct
+
+plot(df)
+plot(colone, coltwo)
+
+
+
+cor.test(x = colone, y = coltwo)
+```
+
+
+### Problem 9d
+Use the cor.test() function to find Pearson’s correlation coefficient and compare it to the one from part (c)
+
+Solution 9d
+```{r}
+cor.test(df$colone, df$coltwo,alternative = "less", method = "pearson")
+```
+They are the same
+
+### Problem 9e
+Calculate Spearman’s rank correlation coefficient using the equation below:
+$$r_{S} = 1 - \frac{6\sum_{i=1}^{n}d_{i}^{2}}{n^3-n}$$
+
+Solution 9e
+```{r}
+
+
+df$rankedone <- rank(colone)
+df$rankedtwo <- rank(coltwo)
+df$difference <- df$rankedone - df$rankedtwo
+df$prod <- (df$difference)^2
+l <- sum(df$prod)
+
+m <- 1 - (l*6) / ((50^3) - 50)
+m
+
+
+```
+
+
+
+### Problem 9f
+Use the cor.test() function to find Spearman’s rank correlation coefficient and compare it to the one from part (e)
+
+Solution 9f
+```{r}
+cor.test(df$colone, df$coltwo,alternative = "less", method = "spearman")
+```
+They are the same after comparing the two
