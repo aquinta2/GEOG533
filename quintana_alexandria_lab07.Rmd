@@ -179,15 +179,15 @@ sy
 
 b <- 3*sx*sy
 b
-
+#r
 r = a/b
 r
-
+#t
 t <- r*sqrt(2)/sqrt(1-r^2)
 t
 
 
-
+#critical t
 ct <- qt(0.975, 2)
 ct
 
@@ -195,7 +195,7 @@ plot(df)
 plot(colone, coltwo)
 
 
-
+#correlation
 cor.test(x = colone, y = coltwo)
 
 ```
@@ -270,7 +270,7 @@ plot(colone, coltwo)
 
 
 cor.test(x = colone, y = coltwo)
-#we accept 
+ 
 ```
 we reject 
 
@@ -294,15 +294,14 @@ kable(df)
 
 ### Solution
 ```{r}
-#compare p value to .1, greater than accept 
 colone <- c(1,2,5,6,11,12)
 first <-  df$colone
 coltwo <- c(8,4,12,3,10,7)
 second <- df$coltwo
-cor.test(df$colone, df$coltwo,alternative = "less", method = "spearman")
-#we accept
-```
+cor.test(x = colone, y = coltwo, alternative = "less", method = "spearman")
 
+```
+we accept
 
 
 ## Question 6
