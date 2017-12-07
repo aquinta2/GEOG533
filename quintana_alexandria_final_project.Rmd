@@ -1,0 +1,96 @@
+---
+title: "Quintana_Alexandria_final_project"
+author: "Alexandria Quintana"
+date: "12/6/2017"
+output: html_document
+---
+
+#Part One: Pie Chart of Inaccessibility
+```{r}
+library(plotrix)
+slices <- c(21.43, 21.43,21.43, 14.29, 7.14,7.14,7.14)
+lbls <- c("Infrequent Bus Times", "Bus Schedule Routes Difficult to Access", 
+          "Public Transit Takes Too Long", "Public Transportation Too Inconsistent",
+          "Parking Issues", "Public Transport Too Crowded", "Roads Too Busy")
+pie(slices, labels = lbls, main="Pie Chart of Inaccessibility")
+```
+
+```{r include = FALSE}
+if(!require(leaflet)) install.packages("leaflet")
+```
+#Part Two: Plotting Locational Data of Inaccessibility 
+```{r}
+mdata <- read.csv("/Users/Alexandria/Downloads/StudentConsumerSurvey2.csv", header = TRUE)
+m <- leaflet()
+m <- addTiles(m) # Add default OpenStreetMap map tiles
+m <- addMarkers(m, lng= mdata$long, lat= mdata$lat)
+m # Print the map
+leaflet(data= mdata) %>% addTiles() %>% addMarkers(
+  clusterOptions = markerClusterOptions()
+)
+```
+
+```{r include = FALSE}
+
+# Install packages for sentiment analysis
+if (!require(twitteR)) {install.packages("twitteR")}
+if (!require(ROAuth)) {install.packages("ROAuth")}
+if (!require(plyr)) {install.packages("plyr")}
+if (!require(dplyr)) {install.packages("dplyr")}
+if (!require(stringr)) {install.packages("stringr")}
+if (!require(ggplot2)) {install.packages("ggplot2")}
+
+library(twitteR)
+library(ROAuth)
+library(plyr)
+library(dplyr)
+library(stringr)
+library(ggplot2)
+
+```
+#Part Three: Sentiment Analysis
+```{r}
+
+neg = scan("negative-words.txt", what="character", comment.char=";")
+pos = scan("positive-words.txt", what="character", comment.char=";")
+score.sentiment = function(sents, pos.words, neg.words)
+  
+{
+  scores = laply(sents, function(sentianalysis, pos.words, neg.words) {
+    
+    sentianalysis = gsub('https://','', sentianalysis) # removes https://
+    sentianalysis = gsub('http://','', sentianalysis) # removes http://
+    sentianalysis =gsub('[^[:graph:]]', ' ', sentianalysis) ## removes graphic characters  #like emoticons 
+    sentianalysis = gsub('[[:punct:]]', '',  sentianalysis) # removes punctuation 
+    sentianalysis = gsub('[[:cntrl:]]', '',  sentianalysis) # removes control characters
+    sentianalysis = gsub('\\d+', '',  sentianalysis) # removes numbers
+    sentianalysis=str_replace_all( sentianalysis,"[^[:graph:]]", " ") 
+    sentianalysis = tolower( sentianalysis) # makes all letters lowercase
+    
+    word.list = str_split(sentianalysis, '\\s+') # splits the tweets by word in a list
+    words = unlist(word.list) # turns the list into vector
+    pos.matches = match(words, pos.words) ## returns matching values for words from list 
+    neg.matches = match(words, neg.words)
+    pos.matches = !is.na(pos.matches) ## converts matching values to true of false
+    neg.matches = !is.na(neg.matches)
+    
+    score = sum(pos.matches) - sum(neg.matches) # true and false are treated as 1 and 0 so they can be added
+    
+    return(score)
+    
+  }, pos.words, neg.words )
+  
+  scores.df = data.frame(score=scores, text=sents)
+  
+  return(scores.df)
+  
+}
+mdata <- read.csv("/Users/Alexandria/Downloads/StudentConsumerSurvey2.csv", header = TRUE)
+l <- as.list(mdata)
+m <- l[mdata$bbow]
+sents = m
+
+analysis = score.sentiment(sents, pos, neg)
+table(analysis$score)
+hist(analysis$score)
+```
